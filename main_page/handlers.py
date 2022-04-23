@@ -23,7 +23,7 @@ def start(message):
 
     button = []
     for butto in o:
-        button.append(*butto.name)
+        button.append(butto.name)
 
     keyboard.add(*button)
     keyboard.add(types.KeyboardButton('Корзина'))
@@ -47,18 +47,21 @@ def text(message):
     if message.text in items:
         user_cart[user_id]['product_name'] = message.text  #
 
-        product = data.User().get_info(message.text)
+        product = models.ProductName.objects.get(name=message.text)
 
-        # Параметр row_width щтвечает за количество кнопок в одной строке
+        # Параметр row_width отвечает за количество кнопок в одной строке
         keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, row_width=3)
 
         # Создаем кнопки для выбора количества
         i = [str(o) for o in range(1, 10)]
         keyboard.add(*i)
 
+        # Читаем фото и отправляем
+        product_photo = open(str(product.product_image), 'rb')
+
         # Если то что выбрал пользователь есть у нас в базе то отправляем ему фото, имя и цену товара
         # Метод .send_photo(кому, какое фото, текст к нему, кнопки(если есть)) отвечает за отправку фото и текст к нему(если имеется)
-        bot.send_photo(message.from_user.id, f'{product[0][1]}', f'{product[0][0]}\n\nЦена: {product[0][-1]}',
+        bot.send_photo(message.from_user.id, product_photo, f'{product.name}\n\nЦена: {product.price}',
                        reply_markup=keyboard)
 
         bot.register_next_step_handler(message, get_quantity)
@@ -69,12 +72,12 @@ def text(message):
 
         y = 'Ваша корзина:'
         # Здесь .full_cart(user_id) этот метод как аргумент будет братьайди юзера чтобы вывести конкретно его товары
-        t = data.User().full_cart(user_id)
+        t = models.Cart.objects.filter(user_id=user_id)
         cart_items = "\n\n{name} \n{count} шт"
 
         for i in t:
-            korzina = cart_items.format(name=i[0],
-                                        count=i[1])
+            korzina = cart_items.format(name=i.product_name,
+                                        count=i.product_count)
             y += korzina
         # print(korzina)
 
@@ -86,7 +89,7 @@ def get_quantity(message):
     count = message.text
     user_cart[user_id]['product_count'] = int(count)  #
 
-    data.User().get_cart(user_id, user_cart[user_id]['product_name'], user_cart[user_id]['product_count'])
+    models.Cart.objects.create(user_id=user_id, product_name=user_cart[user_id]['product_name'], product_count=user_cart[user_id]['product_count'])
     bot.send_message(user_id, 'Продукт успешно добавлен')
 
     # После добавления продукта в корзину нас перекидывет на этап выбора продуктов
