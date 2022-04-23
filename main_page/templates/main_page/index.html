@@ -30,6 +30,7 @@
                         <li class="menu__item">
                             <a href="#index" class="menu__link">Главная</a>
                         </li>
+
                         <li class="menu__item">
                             <a href="#about" class="menu__link">Каталог</a>
                         </li>
@@ -37,7 +38,11 @@
                             <a href="#conta" class="menu__link">Контакты</a>
                         </li>
                         <li class="menu__item">
-                            <a href="accounts/login/" class="menu__link">Вход</a>
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'logout' %}" class="menu__link">Выйти</a>
+                            {% else %}
+                                <a href="accounts/login/" class="menu__link">Вход</a>
+                            {% endif %}
                         </li>
                     </ul>
                 </nav>

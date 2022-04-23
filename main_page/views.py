@@ -24,3 +24,7 @@ def product_info(request, pk):
 
     context = {'products': products}
     return render(request, 'main_page/product_info.html', context)
+
+
+def cart(request):
+    return render(request, 'shopping_cart/cart.html')
