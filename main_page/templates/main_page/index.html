@@ -39,6 +39,7 @@
                         </li>
                         <li class="menu__item">
                             {% if user.is_authenticated %}
+                                <a href="{% url 'cart' %}" class="menu__link">Корзина</a>
                                 <a href="{% url 'logout' %}" class="menu__link">Выйти</a>
                             {% else %}
                                 <a href="accounts/login/" class="menu__link">Вход</a>

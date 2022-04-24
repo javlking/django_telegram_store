@@ -25,3 +25,12 @@ class Cart(models.Model):
 
     def __str__(self):
         return self.user_id
+
+
+class CartWeb(models.Model):
+    product_name = models.ForeignKey(ProductName, on_delete=models.CASCADE)
+    product_count = models.IntegerField()
+    user_id = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.user_id

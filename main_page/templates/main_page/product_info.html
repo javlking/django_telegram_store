@@ -23,7 +23,10 @@
             {% if user.is_authenticated %}
 
                 <div>
-                    <h4><a href="{% url 'cart' %}">В корзину</a></h4>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <h4><input type="submit" value="В корзину"></h4>
+                    </form>
                 </div>
 
             {% endif %}

@@ -4,3 +4,4 @@ from . import models
 admin.site.register(models.Category)
 admin.site.register(models.ProductName)
 admin.site.register(models.Cart)
+admin.site.register(models.CartWeb)
